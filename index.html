@@ -55,9 +55,9 @@
                 cursor: pointer;
                 border-radius: 2px;
                 image-rendering: crisp-edges;
-                width: 16px;
-                height: 16px;
-                background-image: url(map.png);
+                width: 32px;
+                height: 32px;
+                background-image: url("map.png");
                 background-size: 512px 320px;
             }
 
@@ -474,21 +474,31 @@
                     render()
                 }
 
-                list.append(...Object.entries(BUILD).map(([_, item]) => {
-                    const div = document.createElement("div")
+                let cat = "";
 
-                    const x = item.img % TILE * TILE * -2
-                    const y = Math.floor(item.img / TILE) * TILE * -2
-
-                    div.style.backgroundPositionX = x + "px"
-                    div.style.backgroundPositionY = y + "px"
-                    div.tabIndex = 1
-
-                    div.onfocus = () => state.select = item
-                    div.onblur = () => delete state.select
-
-                    return div
-                }))
+                list.append(...BUILD.flatMap(item => {
+    const els = [];
+    
+    if (item.category && item.category !== cat) {
+        cat = item.category;
+        const title = document.createElement("div");
+        title.textContent = cat;
+        title.style.cssText = "grid-column: 1 / -1; font-weight: bold; color: #333; background: none; width: 100%; height: auto; cursor: default; margin-top: 8px;";
+        els.push(title);
+    }
+    
+    const div = document.createElement("div");
+    const x = item.img % TILE * TILE * -2;
+    const y = Math.floor(item.img / TILE) * TILE * -2;
+    
+    div.style.backgroundPosition = `${x}px ${y}px`;
+    div.tabIndex = 1;
+    div.onfocus = () => state.select = item;
+    div.onblur = () => delete state.select;
+    
+    els.push(div);
+    return els;
+}));
 
                 worker.onmessage = e => mats.textContent = e.data
                 canvas.oncontextmenu = e => e.preventDefault()
