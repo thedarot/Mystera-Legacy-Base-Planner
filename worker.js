@@ -15,17 +15,7 @@ onmessage = event => {
         flint: {name: "Flint"},
         bone: {name: "Bone"},
         dirt: {name: "Dirt"},
-        bronze: {name: "Bronze"},
-        wool: {name: "Wool"},
-        feather: {name: "Feather"},
-        flower_seed: {name: "Flower Seed"},
-        holy_seed: {name: "Holly Seed"},
-        tomato_seed: {name: "Tomato Seed"},
-        lettuce_seed: {name: "Lettuce Seed"},
-        onion_seed: {name: "Onion Seed"},
-        salmoberry_seed: {name: "Salmoberry Seed"},
-        dye_seed: {name: "Dye Seed"},
-        potato: {name: "Potato"}
+        bronze: {name: "Bronze"}
     }
 
     postMessage(Object.entries(Object.values(event.data.floor).concat(Object.values(event.data.build)).reduce((all, item) => {
