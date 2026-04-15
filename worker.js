@@ -19,7 +19,7 @@ onmessage = event => {
         wool: {name: "Wool"},
         feather: {name: "Feather"},
         flower_seed: {name: "Flower Seed"},
-        holy_seed: {name: "Holly Seed"},
+        holly_seed: {name: "Holly Seed"},
         tomato_seed: {name: "Tomato Seed"},
         lettuce_seed: {name: "Lettuce Seed"},
         onion_seed: {name: "Onion Seed"},
