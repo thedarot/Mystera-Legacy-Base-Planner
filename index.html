@@ -2,7 +2,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="animal-orientation.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mystera Legacy - Base Planner</title>
@@ -528,10 +527,10 @@
             {cat: "Furniture", name: "Trading Counter", spr: 41, img: 41, build: true, mats: {wood: 50, silver: 10, gold: 5}},
             {cat: "Furniture", name: "Golden Candlestick", spr: 78, img: 78, anim: true, off: 4, build: true, mats: {bronze: 20, flint: 5, gold: 5}},
 
-            {cat: "Animals", name: "Cow", build: true, animal: true, spriteUrl: "https://www.mysteralegacy.com/data/monsters/2.png?v=5.0.9", mats: {}},
-            {cat: "Animals", name: "Chicken", build: true, animal: true, spriteUrl: "https://www.mysteralegacy.com/data/monsters/5.png?v=5.0.9", mats: {}},
-            {cat: "Animals", name: "Sheep", build: true, animal: true, spriteUrl: "https://www.mysteralegacy.com/data/monsters/8.png?v=5.0.9", mats: {}},
-            {cat: "Animals", name: "Cat (White)", build: true, animal: true, spriteUrl: "https://www.mysteralegacy.com/data/monsters/19.png?v=5.0.9", mats: {}},
+            {cat: "Animals", name: "Cow", spr: "cow.png", img: 8, build: true, anim: true, mats: {}},
+            {cat: "Animals", name: "Chicken", spr: 1, img: 1, build: true, anim: true, mats: {}},
+            {cat: "Animals", name: "Sheep", spr: 2, img: 2, build: true, anim: true, mats: {}},
+            {cat: "Animals", name: "Cat (White)", spr: 3, img: 3, build: true, anim: true, mats: {}},
             {cat: "Animals", name: "Cat (Orange)", spr: 3, img: 3, build: true, anim: true, mats: {}},
             {cat: "Animals", name: "Cat (Black)", spr: 3, img: 3, build: true, anim: true, mats: {}},
             {cat: "Animals", name: "Dog (Golden)", spr: 3, img: 3, build: true, anim: true, mats: {}},
@@ -770,26 +769,6 @@
             }
         }
 
-    // Renderizar animais com orientação
-const animals = Object.entries(build).filter(([, v]) => v.animal);
-animals.forEach(([key, animal]) => {
-    const [ax, ay] = key.split(" ").map(Number);
-    const px = (ax - minX) * 16;
-    const py = (ay - minY) * 16;
-
-    const animalData = ANIMALS_DATA.find(a => a.spriteUrl === animal.spriteUrl);
-    if (animalData) {
-        const nearestGate = findNearestAnimalGate(ax, ay, build);
-        let direction = "down";
-        
-        if (nearestGate) {
-            direction = getAnimalDirection(ax, ay, nearestGate.x, nearestGate.y);
-        }
-
-        const frameIndex = getAnimalFrameIndex(animalData, direction);
-        renderAnimalToCanvas(offCtx, animalData, frameIndex, px, py);
-    }
-});
         function exportAsImage(withLegend) {
             const walls = Object.entries(build).filter(([, v]) => v.wall);
             let minX = 0, maxX = 0, minY = 0, maxY = 0;
@@ -1241,25 +1220,6 @@ ${mats}
                         worker.postMessage({floor, build});
                         updateSize();
                         render();
-                        if (wall && wall.animal) {
-    const animalData = ANIMALS_DATA.find(a => a.spriteUrl === wall.spriteUrl);
-    if (animalData) {
-        const nearestGate = findNearestAnimalGate(x, y, build);
-        let direction = "down";
-        
-        if (nearestGate) {
-            direction = getAnimalDirection(x, y, nearestGate.x, nearestGate.y);
-        }
-        
-        const frameIndex = getAnimalFrameIndex(animalData, direction);
-        const [px, py] = loc(animalData.directions[direction][0]);
-        
-        gl.uniform2f(pos, x, y);
-        gl.uniform4f(img, px, py, 1, 1);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-    }
-}
-                        
                     } catch (err) {
                         alert("Falha ao carregar projeto.");
                     }
@@ -1272,14 +1232,7 @@ ${mats}
 
             setInterval(render, 32);
         }
-// Pré-carregar sprites de animais
-const animalsToLoad = ANIMALS_DATA;
-const animalLoadPromises = animalsToLoad.map(animal => loadAnimalSprite(animal.spriteUrl));
 
-Promise.all(animalLoadPromises).then(() => {
-    console.log("✓ Animais carregados");
-    start();
-}).catch(() => start());
         start();
     </script>
 </body>
