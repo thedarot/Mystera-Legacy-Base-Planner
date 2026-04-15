@@ -1,0 +1,24 @@
+{
+  "version": "1.0",
+  "description": "Animal entities with animation frames",
+  "animals": [
+    {
+      "id": "cow",
+      "name": "Cow",
+      "type": "animal",
+      "frames": 12,
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "url": "https://www.mysteralegacy.com/data/monsters/2.png?v=5.0.9",
+      "build": true,
+      "mats": {},
+      "directions": {
+        "up": [0, 1, 2],
+        "right": [3, 4, 5],
+        "down": [6, 7, 8],
+        "left": [9, 10, 11]
+      },
+      "defaultGate": "animal_gate"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Cow",
+  "type": "animal",
+  "frames": 12,
+  "url": "https://www.mysteralegacy.com/data/monsters/2.png?v=5.0.9",
+  "build": true,
+  "mats": {}
+}
