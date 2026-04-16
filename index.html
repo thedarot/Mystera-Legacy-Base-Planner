@@ -422,6 +422,88 @@
         }
 
         #footer span { color: #666; }
+
+        /* ── Controls ────────────────────────────────── */
+        #controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 100;
+        }
+
+        #pan-control {
+            background: #242424;
+            border: 1px solid #444444;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #pan-control button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        #pan-control button:hover {
+            background: rgba(90, 175, 255, 0.1);
+        }
+
+        #pan-control button.active {
+            background: #1a3050;
+        }
+
+        #pan-control button img {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        #zoom-control {
+            background: #242424;
+            border: 1px solid #444444;
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        #zoom-control button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        #zoom-control button:hover {
+            background: rgba(90, 175, 255, 0.1);
+        }
+
+        #zoom-control button img {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
     </style>
 </head>
 
@@ -435,20 +517,20 @@
                 <strong>What is it?</strong><br>
                 A base planner for Mystera Legacy that automatically calculates the cost in materials for your constructions.<br><br>
 
-                <strong>How to use</strong><br>
-                1. Select an item/structure on the left sidebar<br>
-                2. Left click to place on grass<br>
+                <strong>How to use?</strong><br>
+                1. Select an item on the left<br>
+                2. Left click to place<br>
                 3. Right click to remove<br>
-                4. Shift + click to fill in line/area<br>
-                5. Shift + Alt + click to erase some line/area<br><br>
+                4. Shift + click to fill lines/rectangles<br>
+                5. Shift + Alt + click to erase pattern<br><br>
 
-                <strong>There are some tools</strong><br>
-                • Give a name to your project in the text field<br>
+                <strong>Saving your project?</strong><br>
+                • Name your project in the text field<br>
                 • Use "💾 Save" to save as editable .json<br>
                 • Use "📂 Load" to load previous project<br>
-                • Use "📤 Export" to download an <b>image with a material list (.jpg)</b> or <b>material list only (.txt)</b><br><br>
+                • Use "Export" to generate image or text<br><br>
 
-            <div class="subtitle">Enjoy!</div>
+                Enjoy the planner! 🎮
             </div>
             <div class="checkbox-wrapper">
                 <input type="checkbox" id="dontShowAgain" onchange="toggleDontShowAgain()">
@@ -462,15 +544,16 @@
 
     <div id="tooltip"></div>
     <div class="export-popup" id="export-popup">
-        <button onclick="exportProject('jpg-full')">Image w/ Material list (.jpg)</button>
-        <button onclick="exportProject('txt')">Material list (.txt)</button>
+        <button onclick="exportProject('jpg-full')">📷 Full JPG (with legend)</button>
+        <button onclick="exportProject('jpg-image')">🖼️ Image only (no legend)</button>
+        <button onclick="exportProject('txt')">📄 Materials list</button>
     </div>
 
     <div id="left">
         <div id="panel-header">
             <div>
                 <h2>Mystera Legacy — Base Planner</h2>
-                <p>Click on '?' to see the tutorial</p>
+                <p>Left click place · Right click erase · Shift fill</p>
             </div>
             <button id="btnHelp" onclick="showModal()" title="View tutorial">?</button>
         </div>
@@ -491,7 +574,7 @@
             </div>
 
             <div id="save-section">
-                <input type="text" id="baseName" placeholder="Rename you project here...">
+                <input type="text" id="baseName" placeholder="Project name...">
                 <div class="btn-row">
                     <button class="btn accent" id="btnSave">💾 Save</button>
                     <button class="btn" id="btnLoad">📂 Load</button>
@@ -501,18 +584,35 @@
             </div>
 
             <div id="footer">
-                Developed by <span>GreyHope / Darot</span>
+                Materials calculator · <span>GreyHope / Darot</span>
             </div>
         </div>
     </div>
 
     <canvas></canvas>
 
+    <!-- CONTROLES DE ZOOM E PAN -->
+    <div id="controls">
+        <div id="pan-control">
+            <button id="pan-mode" title="Pan mode (hold to drag map)">
+                <img src="https://img.icons8.com/?size=100&id=41478&format=png&color=FFFFFF" alt="Pan">
+            </button>
+        </div>
+        <div id="zoom-control">
+            <button id="zoom-in" title="Zoom in">
+                <img src="https://img.icons8.com/?size=100&id=undefined&format=png&color=ffffff" alt="+">
+            </button>
+            <button id="zoom-out" title="Zoom out">
+                <img src="https://img.icons8.com/?size=100&id=16147&format=png&color=ffffff" alt="−">
+            </button>
+        </div>
+    </div>
+
     <script>
         const TILE = 16;
 
         const BUILD = [
-            // ── Structures ─────────────────────────────────────────
+            // ── Structures ──────────────────────────────────────────
             {cat: "Structures", name: "Arrow Tower", spr: 46, img: 14, anim: true, height: 3, build: true, mats: {stone: 80, obsidian: 20, gold: 1}, wall: true},
             {cat: "Structures", name: "Duel Statue", spr: 45, img: 45, height: 3, build: true, mats: {stone: 100, bone: 20, gold: 15}, wall: true},
             {cat: "Structures", name: "Stone Wall", spr: 25, img: 25, height: 2, build: true, mats: {stone: 30, clay: 10}, wall: true},
@@ -521,8 +621,8 @@
             {cat: "Structures", name: "Personal Gate", spr: 37, img: 37, off: 4, build: true, door: true, mats: {stone: 10, wood: 20, silver: 1}},
             {cat: "Structures", name: "Tribe Gate", spr: 38, img: 38, off: 4, build: true, door: true, mats: {stone: 20, wood: 40, silver: 1, gold: 5}},
             {cat: "Structures", name: "Tribe Vault", spr: 39, img: 39, off: 4, build: true, door: true, mats: {stone: 20, wood: 40, silver: 5, gold: 10}},
-            {cat: "Structures", name: "Walled Tree (Large)", spr: 43, img: 43, height: 3, build: true, mats: {stone: 20, clay: 10, dirt: 10, pinecone: 1}},
-            {cat: "Structures", name: "Walled Tree (Small)", spr: 44, img: 44, height: 3, build: true, mats: {stone: 20, clay: 10, dirt: 10, pinecone: 1}},
+            {cat: "Structures", name: "Walled Tree (Small)", spr: 43, img: 43, height: 2, build: true, mats: {stone: 20, clay: 10, dirt: 10}},
+            {cat: "Structures", name: "Walled Tree (Large)", spr: 44, img: 44, height: 3, build: true, mats: {stone: 30, clay: 15, dirt: 15}},
             {cat: "Structures", name: "Stone Anvil", spr: 61, img: 61, build: true, mats: {stone: 400, silver: 10}},
             {cat: "Structures", name: "Garbage Bin", spr: 57, img: 57, build: true, mats: {clay: 20, flint: 20}},
             {cat: "Structures", name: "Bellows", spr: 62, img: 62, build: true, mats: {stone: 250, clay: 150, charcoal: 8, silver: 10}},
@@ -1046,9 +1146,17 @@ ${mats}
                 render();
             };
 
+            let panMode = false;
+
             canvas.onmousedown = e => {
                 e.preventDefault();
                 const [mx, my] = mouse();
+
+                // ✅ MOVER MAPA COM BOTÃO DO MEIO OU PAN MODE ATIVO
+                if (e.which === 2 || (e.which === 1 && panMode)) {
+                    state.panStart = {x: state.mx, y: state.my, stateX: state.x, stateY: state.y};
+                    return;
+                }
 
                 if (state.shift) {
                     state.quickStart = {x: mx, y: my};
@@ -1070,9 +1178,12 @@ ${mats}
                 state.mx = e.clientX;
                 state.my = e.clientY;
 
-                if (e.buttons === 2 && !state.shift) {
-                    state.x += e.movementX / state.zoom;
-                    state.y += e.movementY / state.zoom;
+                // ✅ ARRASTAR MAPA COM BOTÃO DO MEIO OU PAN MODE
+                if (state.panStart) {
+                    const dx = e.clientX - state.panStart.x;
+                    const dy = e.clientY - state.panStart.y;
+                    state.x = state.panStart.stateX - dx / state.zoom;
+                    state.y = state.panStart.stateY - dy / state.zoom;
                     update();
                 }
 
@@ -1080,6 +1191,11 @@ ${mats}
             };
 
             canvas.onmouseup = e => {
+                // ✅ SOLTAR BOTÃO DO MEIO OU PAN MODE
+                if (e.which === 2 || panMode) {
+                    state.panStart = null;
+                }
+
                 if (state.quickStart && state.select) {
                     const [mx, my] = mouse();
                     const cells = fillRectangle(state.quickStart.x, state.quickStart.y, mx, my);
@@ -1229,6 +1345,28 @@ ${mats}
                 };
                 reader.readAsText(file);
                 document.getElementById("fileInput").value = "";
+            };
+
+            // ── ZOOM CONTROLS ──────────────────────────
+            document.getElementById("zoom-in").onclick = () => {
+                state.zoom *= 1.2; // Aumenta 20%
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("zoom-out").onclick = () => {
+                state.zoom = Math.max(state.zoom * (1 / 1.2), 4); // Diminui 20%
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("pan-mode").onclick = function() {
+                panMode = !panMode;
+                this.classList.toggle("active");
             };
 
             tiles.src = "map.png";
