@@ -1176,9 +1176,11 @@ ${mats}
                 state.mx = e.clientX;
                 state.my = e.clientY;
 
-                if (e.buttons === 2 && !state.shift) {
-                    state.x += e.movementX / state.zoom;
-                    state.y += e.movementY / state.zoom;
+                if (state.panStart) {
+                    const dx = e.clientX - state.panStart.x;
+                    const dy = e.clientY - state.panStart.y;
+                    state.x = state.panStart.stateX - dx / state.zoom;
+                    state.y = state.panStart.stateY - dy / state.zoom;
                     update();
                 }
 
