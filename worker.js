@@ -25,7 +25,9 @@ onmessage = event => {
         onion_seed: {name: "Onion Seed"},
         salmoberry_seed: {name: "Salmoberry Seed"},
         dye_seed: {name: "Dye Seed"},
-        potato: {name: "Potato"}
+        potato: {name: "Potato"},
+        pinecone: {name: "Pinecone"}
+        
     }
 
     postMessage(Object.entries(Object.values(event.data.floor).concat(Object.values(event.data.build)).reduce((all, item) => {
