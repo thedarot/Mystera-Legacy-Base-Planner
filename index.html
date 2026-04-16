@@ -1330,6 +1330,28 @@ ${mats}
                 document.getElementById("fileInput").value = "";
             };
 
+            // ── ZOOM CONTROLS ──────────────────────────
+            document.getElementById("zoom-in").onclick = () => {
+                state.zoom *= 1.15;
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("zoom-out").onclick = () => {
+                state.zoom = Math.max(state.zoom * (1 / 1.15), 4);
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("pan-mode").onclick = function() {
+                panMode = !panMode;
+                this.classList.toggle("active");
+            };
+
             tiles.src = "map.png";
 
             setInterval(render, 32);
