@@ -721,7 +721,6 @@
         const program = gl.createProgram();
         const build = {};
         const floor = {};
-        const topBuild = {}; // stacked top items (e.g. misc items on top of Trading Counter)
 
         function showModal() {
             document.getElementById("modal-overlay").classList.remove("hidden");
@@ -797,33 +796,15 @@
                 const key = add(x, y);
                 
                 if (isErase) {
-                    // erase top layer first if present, otherwise remove base/floor/height
-                    if (topBuild[key]) {
-                        delete topBuild[key];
-                    } else {
-                        delete build[key];
-                        delete floor[key];
-                        delete heightMap[key];
-                    }
+                    delete build[key];
+                    delete floor[key];
+                    delete heightMap[key];
                 } else if (state.select) {
                     if (item.build) {
                         if (floor[key] && floor[key].block) delete floor[key];
-
-                        // allow stacking: if there's a Trading Counter base and the new item
-                        // is a Miscellaneous Items entry (but not Chest), place it as top.
-                        if (build[key] && build[key].name === "Trading Counter" &&
-                            item.cat === "Miscellaneous Items" && item.name !== "Chest") {
-                            // only place top if not already occupied
-                            if (!topBuild[key]) topBuild[key] = item;
-                        } else {
-                            if (canPlace(x, y, item)) {
-                                build[key] = item;
-                                placeItem(x, y, item);
-                                // if we just placed a non-trading-base, remove any incompatible top
-                                if (topBuild[key] && build[key].name !== "Trading Counter") {
-                                    delete topBuild[key];
-                                }
-                            }
+                        if (canPlace(x, y, item)) {
+                            build[key] = item;
+                            placeItem(x, y, item);
                         }
                     } else {
                         if (build[key] && item.block) delete build[key];
@@ -832,7 +813,7 @@
                 }
             });
 
-            worker.postMessage({floor, build, topBuild});
+            worker.postMessage({floor, build});
             updateSize();
         }
 
@@ -844,26 +825,16 @@
 
             if (state.select.build) {
                 if (floor[key] && floor[key].block) delete floor[key];
-
-                // stacking: miscellaneous items (except Chest) go on top of Trading Counter
-                if (build[key] && build[key].name === "Trading Counter" &&
-                    state.select.cat === "Miscellaneous Items" && state.select.name !== "Chest") {
-                    if (!topBuild[key]) topBuild[key] = state.select;
-                } else {
-                    if (canPlace(mx, my, state.select)) {
-                        build[key] = state.select;
-                        placeItem(mx, my, state.select);
-                        if (topBuild[key] && build[key].name !== "Trading Counter") {
-                            delete topBuild[key];
-                        }
-                    }
+                if (canPlace(mx, my, state.select)) {
+                    build[key] = state.select;
+                    placeItem(mx, my, state.select);
                 }
             } else {
                 if (build[key] && state.select.block) delete build[key];
                 floor[key] = state.select;
             }
 
-            worker.postMessage({floor, build, topBuild});
+            worker.postMessage({floor, build});
             updateSize();
             return true;
         }
@@ -946,18 +917,6 @@
                             const sx = (wall.img % 16) * 16;
                             const sy = Math.floor(wall.img / 16) * 16;
                             offCtx.drawImage(tileImg, sx, sy, 16, wall.height * 8, px, py - (wall.height - 1) * 8, 16, wall.height * 16);
-                        }
-
-                        // draw any top item (e.g., misc item on top of Trading Counter)
-                        const top = topBuild[add(x, y)];
-                        if (top) {
-                            const sxT = (top.img % 16) * 16;
-                            const syT = Math.floor(top.img / 16) * 16;
-                            if (top.height) {
-                                offCtx.drawImage(tileImg, sxT, syT, 16, top.height * 8, px, py - (top.height - 1) * 8, 16, top.height * 16);
-                            } else {
-                                offCtx.drawImage(tileImg, sxT, syT, 16, 16, px, py, 16, 16);
-                            }
                         }
                     }
                 }
