@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -478,35 +477,34 @@
             background: #242424;
             border: 1px solid #444444;
             border-radius: 6px;
-            padding: 4px;
+            padding: 6px;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
         }
 
         #zoom-control button {
-            width: 24px;
-            height: 24px;
-            border: 1px solid #3a3a3a;
-            background: #2e2e2e;
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 4px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
-            color: #ccc;
-            font-family: monospace;
-            font-size: 14px;
-            font-weight: bold;
-            line-height: 1;
         }
 
         #zoom-control button:hover {
-            background: #3a3a3a;
-            border-color: #5af;
-            color: #fff;
+            background: rgba(90, 175, 255, 0.1);
+        }
+
+        #zoom-control button img {
+            width: 16px;
+            height: 16px;
+            display: block;
         }
     </style>
 </head>
@@ -602,8 +600,12 @@
             </button>
         </div>
         <div id="zoom-control">
-            <button id="zoom-in" title="Zoom in">+</button>
-            <button id="zoom-out" title="Zoom out">−</button>
+            <button id="zoom-in" title="Zoom in">
+                <img src="https://img.icons8.com/?size=16&id=16148&format=png&color=ffffff" alt="+">
+            </button>
+            <button id="zoom-out" title="Zoom out">
+                <img src="https://img.icons8.com/?size=16&id=16147&format=png&color=ffffff" alt="−">
+            </button>
         </div>
     </div>
 
@@ -611,6 +613,7 @@
         const TILE = 16;
 
         const BUILD = [
+            // ── Structures ─────────────────────────────────────────
             {cat: "Structures", name: "Arrow Tower", spr: 46, img: 14, anim: true, height: 3, build: true, mats: {stone: 80, obsidian: 20, gold: 1}, wall: true},
             {cat: "Structures", name: "Duel Statue", spr: 45, img: 45, height: 3, build: true, mats: {stone: 100, bone: 20, gold: 15}, wall: true},
             {cat: "Structures", name: "Stone Wall", spr: 25, img: 25, height: 2, build: true, mats: {stone: 30, clay: 10}, wall: true},
@@ -628,6 +631,8 @@
             {cat: "Structures", name: "Fire Pit", spr: 77, img: 77, build: true, mats: {stone: 20, wood: 4, flint: 4, charcoal: 4}},
             {cat: "Structures", name: "Stairs", spr: 8, img: 8, build: true, mats: {stone: 100, clay: 20, gold: 1}},
             {cat: "Structures", name: "Recall Tile", spr: 24, img: 24, build: true, mats: {escape_lantern: 1, dragon_scale: 1, gold: 10}},
+
+            // ── Furniture ───────────────────────────────────────────
             {cat: "Furniture", name: "Training Dummy", spr: 58, img: 42, height: 2, build: true, mats: {wood: 50, tinder: 20, red_dye: 1}},
             {cat: "Furniture", name: "Signpost", spr: 59, img: 59, build: true, mats: {wood: 20}},
             {cat: "Furniture", name: "Bed", spr: 113, img: 81, height: 3, build: true, mats: {wood: 20, feather: 4, wool: 4}},
@@ -637,6 +642,8 @@
             {cat: "Furniture", name: "Bookcase", spr: 112, img: 112, build: true, mats: {wood: 200, gold: 5}},
             {cat: "Furniture", name: "Trading Counter", spr: 41, img: 41, build: true, mats: {wood: 50, silver: 10, gold: 5}},
             {cat: "Furniture", name: "Golden Candlestick", spr: 78, img: 78, anim: true, off: 4, build: true, mats: {bronze: 20, flint: 5, gold: 5}},
+
+            // ── Miscellaneous Items ──────────────────────────────────────
             {cat: "Miscellaneous Items", name: "Tomato", spr: 82, img: 82, mats: {}},
             {cat: "Miscellaneous Items", name: "Fish", spr: 83, img: 83, mats: {}},
             {cat: "Miscellaneous Items", name: "Malachite", spr: 98, img: 98, mats: {}},
@@ -648,6 +655,8 @@
             {cat: "Miscellaneous Items", name: "Ruby", spr: 125, img: 125, mats: {ruby: 1}},
             {cat: "Miscellaneous Items", name: "Esmerald", spr: 126, img: 126, mats: {esmerald: 1}},
             {cat: "Miscellaneous Items", name: "Tea", spr: 127, img: 127, mats: {}},
+
+            // ── Floors & Roads ──────────────────────────────────────
             {cat: "Floors & Roads", name: "Ground", spr: 2, img: 2, mats: {}},
             {cat: "Floors & Roads", name: "Gravel Road", spr: 3, img: 3, block: true, mats: {stone: 5, clay: 1}},
             {cat: "Floors & Roads", name: "Stone Road", spr: 4, img: 4, block: true, mats: {stone: 20}},
@@ -656,6 +665,8 @@
             {cat: "Floors & Roads", name: "Stone Floor", spr: 7, img: 7, mats: {stone: 15}},
             {cat: "Floors & Roads", name: "Deep Water", spr: 21, img: 21, anim: true, block: true, mats: {}},
             {cat: "Floors & Roads", name: "Shallow Water", spr: 23, img: 23, block: true, mats: {}},
+
+            // ── Farming ─────────────────────────────────────────────
             {cat: "Farming", name: "Spice", spr: 68, img: 68, build: true, mats: {holly_seed: 1}},
             {cat: "Farming", name: "Dye", spr: 69, img: 69, build: true, mats: {dye_seed: 1}},
             {cat: "Farming", name: "Salmoberry", spr: 70, img: 70, build: true, mats: {salmoberry_seed: 1}},
@@ -665,6 +676,8 @@
             {cat: "Farming", name: "Onion", spr: 74, img: 74, build: true, mats: {onion_seed: 1}},
             {cat: "Farming", name: "Lettuce", spr: 75, img: 75, build: true, mats: {lettuce_seed: 1}},
             {cat: "Farming", name: "Tomato", spr: 76, img: 76, build: true, mats: {tomato_seed: 1}},
+
+            // ── Flowers ─────────────────────────────────────────────
             {cat: "Flowers", name: "Flower 1", spr: 84, img: 84, build: true, mats: {flower_seed: 1}},
             {cat: "Flowers", name: "Flower 2", spr: 85, img: 85, build: true, mats: {flower_seed: 1}},
             {cat: "Flowers", name: "Flower 3", spr: 86, img: 86, build: true, mats: {flower_seed: 1}},
@@ -708,78 +721,83 @@
         const program = gl.createProgram();
         const build = {};
         const floor = {};
-        const stackedItems = {};
 
-        function showModal() { document.getElementById("modal-overlay").classList.remove("hidden"); }
+        function showModal() {
+            document.getElementById("modal-overlay").classList.remove("hidden");
+        }
+
         function closeModal() {
             document.getElementById("modal-overlay").classList.add("hidden");
-            if (document.getElementById("dontShowAgain").checked) localStorage.setItem("basePlannerDontShowModal", "true");
+            if (document.getElementById("dontShowAgain").checked) {
+                localStorage.setItem("basePlannerDontShowModal", "true");
+            }
         }
+
         function toggleDontShowAgain() {
-            if (document.getElementById("dontShowAgain").checked) localStorage.setItem("basePlannerDontShowModal", "true");
-            else localStorage.removeItem("basePlannerDontShowModal");
+            if (document.getElementById("dontShowAgain").checked) {
+                localStorage.setItem("basePlannerDontShowModal", "true");
+            } else {
+                localStorage.removeItem("basePlannerDontShowModal");
+            }
         }
-        if (!localStorage.getItem("basePlannerDontShowModal")) document.getElementById("modal-overlay").classList.remove("hidden");
-        else document.getElementById("modal-overlay").classList.add("hidden");
+
+        if (!localStorage.getItem("basePlannerDontShowModal")) {
+            document.getElementById("modal-overlay").classList.remove("hidden");
+        } else {
+            document.getElementById("modal-overlay").classList.add("hidden");
+        }
 
         function mouse() {
             const rect = canvas.getBoundingClientRect();
-            return [Math.round((state.mx - rect.left - canvas.width / 2) / state.zoom - state.x), Math.round((state.my - canvas.height / 2) / state.zoom - state.y)];
+            return [
+                Math.round((state.mx - rect.left - canvas.width / 2) / state.zoom - state.x),
+                Math.round((state.my - canvas.height / 2) / state.zoom - state.y)
+            ];
         }
-        function add(x, y) { return x + " " + y; }
+
+        function add(x, y) {
+            return x + " " + y;
+        }
+
         function fillRectangle(startX, startY, endX, endY) {
             const cells = [];
-            const minX = Math.min(startX, endX), maxX = Math.max(startX, endX), minY = Math.min(startY, endY), maxY = Math.max(startY, endY);
-            for (let x = minX; x <= maxX; x++) for (let y = minY; y <= maxY; y++) cells.push({x, y});
+            const minX = Math.min(startX, endX);
+            const maxX = Math.max(startX, endX);
+            const minY = Math.min(startY, endY);
+            const maxY = Math.max(startY, endY);
+
+            for (let x = minX; x <= maxX; x++) {
+                for (let y = minY; y <= maxY; y++) {
+                    cells.push({x, y});
+                }
+            }
             return cells;
         }
+
         function canPlace(x, y, item) {
             if (!item.height) return true;
             const key = add(x, y);
             return !heightMap[key] || heightMap[key] < 1;
         }
+
         function placeItem(x, y, item) {
             const key = add(x, y);
             if (!item.height) return true;
-            if (heightMap[key] && heightMap[key] >= item.height) return false;
-            heightMap[key] = item.height;
+            
+            const requiredHeight = item.height;
+            if (heightMap[key] && heightMap[key] >= requiredHeight) return false;
+            
+            heightMap[key] = requiredHeight;
             return true;
         }
-        function isMiscellaneous(item) { return item.cat === "Miscellaneous Items"; }
-        function isChest(item) { return item.name === "Chest"; }
-        function getTradeCounterAtPosition(x, y) {
-            const key = add(x, y);
-            const buildItem = build[key];
-            return buildItem && buildItem.name === "Trading Counter" ? buildItem : null;
-        }
-        function tryStackOnCounter(x, y, item) {
-            const counter = getTradeCounterAtPosition(x, y);
-            if (!counter) return false;
-            const key = add(x, y);
-            // Only 1 misc item allowed on top of Trading Counter
-            if (stackedItems[key] && stackedItems[key].length >= 1) return false;
-            if (!stackedItems[key]) stackedItems[key] = [];
-            stackedItems[key] = [item]; // replace, only 1 allowed
-            return true;
-        }
-        function tryStackMiscOnMisc(x, y, item) {
-            // Misc items can stack on other misc items (not chest, not on a counter)
-            const key = add(x, y);
-            const floorItem = floor[key];
-            if (!floorItem || !isMiscellaneous(floorItem) || isChest(floorItem)) return false;
-            // Don't stack on a position that already has a counter (handled by tryStackOnCounter)
-            if (getTradeCounterAtPosition(x, y)) return false;
-            if (!stackedItems[key]) stackedItems[key] = [];
-            stackedItems[key].push(item);
-            return true;
-        }
+
         function placeMultiple(cells, item, isErase = false) {
             cells.forEach(({x, y}) => {
                 const key = add(x, y);
+                
                 if (isErase) {
                     delete build[key];
                     delete floor[key];
-                    delete stackedItems[key];
                     delete heightMap[key];
                 } else if (state.select) {
                     if (item.build) {
@@ -789,33 +807,22 @@
                             placeItem(x, y, item);
                         }
                     } else {
-                        if (isMiscellaneous(item) && !isChest(item)) {
-                            // Try to stack on Trading Counter first (1 item max)
-                            if (tryStackOnCounter(x, y, item)) {
-                                // stacked on counter
-                            } else if (floor[key] && isMiscellaneous(floor[key]) && !isChest(floor[key])) {
-                                // Stack on existing misc item (unlimited)
-                                tryStackMiscOnMisc(x, y, item);
-                            } else {
-                                if (build[key] && item.block) delete build[key];
-                                floor[key] = item;
-                                delete stackedItems[key];
-                            }
-                        } else {
-                            if (build[key] && item.block) delete build[key];
-                            floor[key] = item;
-                            delete stackedItems[key];
-                        }
+                        if (build[key] && item.block) delete build[key];
+                        floor[key] = item;
                     }
                 }
             });
-            worker.postMessage({floor, build, stackedItems});
+
+            worker.postMessage({floor, build});
             updateSize();
         }
+
         function place() {
             if (!state.select) return false;
+
             const [mx, my] = mouse();
             const key = add(mx, my);
+
             if (state.select.build) {
                 if (floor[key] && floor[key].block) delete floor[key];
                 if (canPlace(mx, my, state.select)) {
@@ -823,37 +830,28 @@
                     placeItem(mx, my, state.select);
                 }
             } else {
-                if (isMiscellaneous(state.select) && !isChest(state.select)) {
-                    // Try to stack on Trading Counter first (1 item max)
-                    if (tryStackOnCounter(mx, my, state.select)) {
-                        // stacked on counter
-                    } else if (floor[key] && isMiscellaneous(floor[key]) && !isChest(floor[key])) {
-                        // Stack on existing misc item (unlimited)
-                        tryStackMiscOnMisc(mx, my, state.select);
-                    } else {
-                        if (build[key] && state.select.block) delete build[key];
-                        floor[key] = state.select;
-                        delete stackedItems[key];
-                    }
-                } else {
-                    if (build[key] && state.select.block) delete build[key];
-                    floor[key] = state.select;
-                    delete stackedItems[key];
-                }
+                if (build[key] && state.select.block) delete build[key];
+                floor[key] = state.select;
             }
-            worker.postMessage({floor, build, stackedItems});
+
+            worker.postMessage({floor, build});
             updateSize();
             return true;
         }
+
         function updateSize() {
             const walls = Object.entries(build).filter(([, v]) => v.wall);
-            if (walls.length === 0) { document.getElementById("size-val").textContent = "—"; return; }
+            if (walls.length === 0) {
+                document.getElementById("size-val").textContent = "—";
+                return;
+            }
             const xs = walls.map(([k]) => +k.split(" ")[0]);
             const ys = walls.map(([k]) => +k.split(" ")[1]);
             const w = Math.max(...xs) - Math.min(...xs) + 1;
             const h = Math.max(...ys) - Math.min(...ys) + 1;
             document.getElementById("size-val").textContent = `${w} × ${h}`;
         }
+
         function toggleExportPopup(e) {
             const popup = document.getElementById("export-popup");
             const rect = e.target.getBoundingClientRect();
@@ -861,14 +859,21 @@
             popup.style.top = (rect.bottom + 5) + "px";
             popup.classList.toggle("active");
         }
+
         function exportProject(type) {
             document.getElementById("export-popup").classList.remove("active");
-            if (type === "jpg-full" || type === "jpg-image") exportAsImage(type === "jpg-full");
-            else if (type === "txt") exportAsText();
+
+            if (type === "jpg-full" || type === "jpg-image") {
+                exportAsImage(type === "jpg-full");
+            } else if (type === "txt") {
+                exportAsText();
+            }
         }
+
         function exportAsImage(withLegend) {
             const walls = Object.entries(build).filter(([, v]) => v.wall);
             let minX = 0, maxX = 0, minY = 0, maxY = 0;
+            
             if (walls.length > 0) {
                 const xs = walls.map(([k]) => +k.split(" ")[0]);
                 const ys = walls.map(([k]) => +k.split(" ")[1]);
@@ -877,49 +882,72 @@
                 minY = Math.min(...ys) - 1;
                 maxY = Math.max(...ys) + 1;
             }
-            const baseW = (maxX - minX + 1) * 16, baseH = (maxY - minY + 1) * 16;
-            const offCanvas = document.createElement("canvas"), offCtx = offCanvas.getContext("2d");
+
+            const baseW = (maxX - minX + 1) * 16;
+            const baseH = (maxY - minY + 1) * 16;
+
+            const offCanvas = document.createElement("canvas");
+            const offCtx = offCanvas.getContext("2d");
+
             offCanvas.width = baseW;
             offCanvas.height = baseH;
+
             offCtx.fillStyle = "#000";
             offCtx.fillRect(0, 0, baseW, baseH);
+
             const tileImg = new Image();
             tileImg.onload = () => {
                 for (let x = minX; x <= maxX; x++) {
                     for (let y = minY; y <= maxY; y++) {
-                        const px = (x - minX) * 16, py = (y - minY) * 16;
+                        const px = (x - minX) * 16;
+                        const py = (y - minY) * 16;
+
                         const tile = floor[add(x, y)];
                         if (tile) {
-                            const sx = (tile.img % 16) * 16, sy = Math.floor(tile.img / 16) * 16;
+                            const sx = (tile.img % 16) * 16;
+                            const sy = Math.floor(tile.img / 16) * 16;
                             offCtx.drawImage(tileImg, sx, sy, 16, 16, px, py, 16, 16);
                         } else {
                             offCtx.fillStyle = "#2a5c2a";
                             offCtx.fillRect(px, py, 16, 16);
                         }
+
                         const wall = build[add(x, y)];
                         if (wall) {
-                            const sx = (wall.img % 16) * 16, sy = Math.floor(wall.img / 16) * 16;
+                            const sx = (wall.img % 16) * 16;
+                            const sy = Math.floor(wall.img / 16) * 16;
                             offCtx.drawImage(tileImg, sx, sy, 16, wall.height * 8, px, py - (wall.height - 1) * 8, 16, wall.height * 16);
                         }
                     }
                 }
+
                 let finalCanvas = offCanvas;
+
                 if (withLegend) {
-                    const legendCanvas = document.createElement("canvas"), legendCtx = legendCanvas.getContext("2d");
+                    const legendCanvas = document.createElement("canvas");
+                    const legendCtx = legendCanvas.getContext("2d");
+
                     legendCanvas.width = 1080;
                     legendCanvas.height = baseH + 220;
+
                     legendCtx.fillStyle = "#1a1a1a";
                     legendCtx.fillRect(0, 0, legendCanvas.width, legendCanvas.height);
+
                     legendCtx.drawImage(offCanvas, 0, 0);
+
                     legendCtx.fillStyle = "#242424";
                     legendCtx.fillRect(0, baseH, 1080, 220);
+
                     legendCtx.fillStyle = "#fff";
                     legendCtx.font = "bold 22px monospace";
                     legendCtx.fillText(document.getElementById("baseName").value || "Unnamed Base", 20, baseH + 35);
-                    const sizeText = document.getElementById("size-val").textContent, now = new Date().toLocaleDateString();
+
+                    const sizeText = document.getElementById("size-val").textContent;
+                    const now = new Date().toLocaleDateString();
                     legendCtx.fillStyle = "#aaa";
                     legendCtx.font = "11px monospace";
                     legendCtx.fillText(`${sizeText} · ${now}`, 20, baseH + 58);
+
                     legendCtx.strokeStyle = "#555";
                     legendCtx.lineWidth = 1;
                     legendCtx.strokeRect(20, baseH + 70, 1040, 35);
@@ -927,10 +955,16 @@
                     legendCtx.font = "9px monospace";
                     legendCtx.fillText("Coded by GreyHope / Updated by Darot", 30, baseH + 87);
                     legendCtx.fillText("Materials calculator for Mystera Legacy", 30, baseH + 99);
-                    const mats = document.getElementById("mats").textContent, matLines = mats.split("\n").filter(l => l.trim());
+
+                    const mats = document.getElementById("mats").textContent;
+                    const matLines = mats.split("\n").filter(l => l.trim());
                     legendCtx.fillStyle = "#ccc";
                     legendCtx.font = "9px monospace";
-                    let xCol = 20, yOffset = baseH + 120, colCount = 0;
+
+                    let xCol = 20;
+                    let yOffset = baseH + 120;
+                    let colCount = 0;
+
                     matLines.forEach((line) => {
                         if (colCount >= 10) {
                             xCol += 320;
@@ -941,8 +975,10 @@
                         yOffset += 12;
                         colCount++;
                     });
+
                     finalCanvas = legendCanvas;
                 }
+
                 const link = document.createElement("a");
                 link.href = finalCanvas.toDataURL("image/jpeg", 0.92);
                 link.download = (document.getElementById("baseName").value || "base_design") + ".jpg";
@@ -950,213 +986,397 @@
             };
             tileImg.src = "map.png";
         }
+
         function exportAsText() {
-            const sizeText = document.getElementById("size-val").textContent, now = new Date().toLocaleDateString(), mats = document.getElementById("mats").textContent;
-            const text = `═══════════════════════════════════════════\n${document.getElementById("baseName").value || "Unnamed Base"}\n═══════════════════════════════════════════\n\nBase Size: ${sizeText}\nDate: ${now}\n\n`;
+            const sizeText = document.getElementById("size-val").textContent;
+            const now = new Date().toLocaleDateString();
+            const mats = document.getElementById("mats").textContent;
+
+            const text = `═══════════════════════════════════════════
+${document.getElementById("baseName").value || "Unnamed Base"}
+═══════════════════════════════════════════
+
+Base Size: ${sizeText}
+Date: ${now}
+
+───────────────────────────────────────────
+Materials calculator for Mystera Legacy
+Coded by GreyHope / Updated by Darot
+───────────────────────────────────────────
+
+MATERIALS REQUIRED:
+
+${mats}
+
+═══════════════════════════════════════════`;
+
+            const blob = new Blob([text], { type: "text/plain" });
             const link = document.createElement("a");
-            link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(text + mats);
-            link.download = (document.getElementById("baseName").value || "base_design") + ".txt";
+            link.href = URL.createObjectURL(blob);
+            link.download = (document.getElementById("baseName").value || "materials") + ".txt";
             link.click();
         }
-        const urlParams = new URLSearchParams(location.search);
-        const baseState = urlParams.get("base");
-        if (baseState) {
-            const decodedState = JSON.parse(atob(baseState));
-            Object.assign(build, decodedState.build);
-            Object.assign(floor, decodedState.floor);
-            Object.assign(stackedItems, decodedState.stackedItems || {});
-            Object.assign(heightMap, decodedState.heightMap);
-            document.getElementById("baseName").value = decodedState.baseName || "";
-            worker.postMessage({floor, build, stackedItems});
-        }
-        BUILD.forEach(item => { item.build = item.build || false; });
-        const cats = [...new Set(BUILD.map(e => e.cat))];
-        cats.forEach(cat => {
-            const section = document.createElement("div");
-            section.className = "cat-section";
-            const label = document.createElement("div");
-            label.className = "cat-label";
-            label.textContent = cat;
-            const toggle = document.createElement("span");
-            toggle.className = "toggle";
-            toggle.textContent = "▼";
-            label.appendChild(toggle);
-            section.appendChild(label);
-            const grid = document.createElement("div");
-            grid.className = "cat-grid";
-            BUILD.filter(e => e.cat === cat).forEach(item => {
-                const btn = document.createElement("button");
-                btn.className = "item-btn";
-                btn.style.backgroundPosition = `-${item.img % 16 * 28}px -${Math.floor(item.img / 16) * 28}px`;
-                btn.title = item.name;
-                btn.addEventListener("mouseenter", e => {
-                    const tooltip = document.getElementById("tooltip");
-                    tooltip.textContent = item.name;
-                    tooltip.style.display = "block";
-                    tooltip.style.left = (e.pageX + 10) + "px";
-                    tooltip.style.top = (e.pageY + 10) + "px";
-                });
-                btn.addEventListener("mouseleave", () => { document.getElementById("tooltip").style.display = "none"; });
-                btn.addEventListener("click", () => {
-                    state.select = item;
-                    list.querySelectorAll(".item-btn").forEach(e => e.style.borderColor = "");
-                    btn.style.borderColor = "#5af";
-                });
-                grid.appendChild(btn);
-            });
-            label.addEventListener("click", () => {
-                grid.classList.toggle("collapsed");
-                toggle.textContent = grid.classList.contains("collapsed") ? "▶" : "▼";
-            });
-            section.appendChild(grid);
-            list.appendChild(section);
-        });
-        document.getElementById("btnSave").addEventListener("click", () => {
-            const state = {build, floor, stackedItems, heightMap, baseName: document.getElementById("baseName").value};
-            const encoded = btoa(JSON.stringify(state));
-            const url = location.origin + location.pathname + "?base=" + encoded;
-            navigator.clipboard.writeText(url);
-            alert("Project URL copied to clipboard!");
-        });
-        document.getElementById("btnLoad").addEventListener("click", () => { document.getElementById("fileInput").click(); });
-        document.getElementById("fileInput").addEventListener("change", (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    const data = JSON.parse(event.target.result);
-                    Object.keys(build).forEach(k => delete build[k]);
-                    Object.keys(floor).forEach(k => delete floor[k]);
-                    Object.keys(stackedItems).forEach(k => delete stackedItems[k]);
-                    Object.keys(heightMap).forEach(k => delete heightMap[k]);
-                    Object.assign(build, data.build);
-                    Object.assign(floor, data.floor);
-                    Object.assign(stackedItems, data.stackedItems || {});
-                    Object.assign(heightMap, data.heightMap);
-                    document.getElementById("baseName").value = data.baseName || "";
-                    worker.postMessage({floor, build, stackedItems});
-                    updateSize();
-                } catch (err) { alert("Error loading file: " + err.message); }
+
+        function start() {
+            const update = () => {
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
             };
-            reader.readAsText(file);
-        });
-        canvas.addEventListener("mousemove", (e) => { state.mx = e.clientX; state.my = e.clientY; });
-        canvas.addEventListener("mousedown", (e) => {
-            if (e.button === 0) {
-                if (state.shift) {
-                    if (state.alt) {
-                        const [mx, my] = mouse();
-                        const cells = fillRectangle(state.quickStart[0], state.quickStart[1], mx, my);
-                        placeMultiple(cells, state.select, true);
-                    } else if (!state.quickStart) state.quickStart = mouse();
-                } else { place(); state.quickStart = null; }
-            } else if (e.button === 2) {
-                const [mx, my] = mouse();
-                const key = add(mx, my);
-                delete build[key];
-                delete floor[key];
-                delete stackedItems[key];
-                delete heightMap[key];
-                worker.postMessage({floor, build, stackedItems});
-                updateSize();
-            }
-        });
-        canvas.addEventListener("mouseup", (e) => {
-            if (state.shift && state.quickStart && e.button === 0) {
-                const [mx, my] = mouse();
-                const cells = fillRectangle(state.quickStart[0], state.quickStart[1], mx, my);
-                placeMultiple(cells, state.select);
-                state.quickStart = null;
-            }
-        });
-        canvas.addEventListener("contextmenu", (e) => e.preventDefault());
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "Shift") state.shift = true;
-            if (e.key === "Alt") state.alt = true;
-        });
-        document.addEventListener("keyup", (e) => {
-            if (e.key === "Shift") state.shift = false;
-            if (e.key === "Alt") state.alt = false;
-        });
-        canvas.addEventListener("wheel", (e) => {
-            e.preventDefault();
-            const zoomSpeed = 0.1, oldZoom = state.zoom;
-            state.zoom += e.deltaY < 0 ? state.zoom * zoomSpeed : -state.zoom * zoomSpeed;
-            state.zoom = Math.max(TILE, state.zoom);
-            const rect = canvas.getBoundingClientRect();
-            const mx = (state.mx - rect.left - canvas.width / 2) / oldZoom;
-            const my = (state.my - rect.height / 2) / oldZoom;
-            state.x += mx - (state.mx - rect.left - canvas.width / 2) / state.zoom;
-            state.y += my - (state.my - rect.height / 2) / state.zoom;
-        }, {passive: false});
-        document.getElementById("zoom-in").addEventListener("click", () => { state.zoom *= 1.2; });
-        document.getElementById("zoom-out").addEventListener("click", () => { state.zoom /= 1.2; });
-        document.getElementById("pan-mode").addEventListener("mousedown", () => {
-            const panMode = document.getElementById("pan-mode");
-            panMode.classList.toggle("active");
-            if (panMode.classList.contains("active")) {
-                const startMouse = {x: state.mx, y: state.my}, startPos = {x: state.x, y: state.y};
-                const moveFn = (e) => {
-                    state.mx = e.clientX;
-                    state.my = e.clientY;
-                    const deltaX = state.mx - startMouse.x, deltaY = state.my - startMouse.y;
-                    state.x = startPos.x - deltaX / state.zoom;
-                    state.y = startPos.y - deltaY / state.zoom;
-                };
-                const upFn = () => {
-                    document.removeEventListener("mousemove", moveFn);
-                    document.removeEventListener("mouseup", upFn);
-                    panMode.classList.remove("active");
-                };
-                document.addEventListener("mousemove", moveFn);
-                document.addEventListener("mouseup", upFn);
-            }
-        });
-        const draw = () => {
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            const vertexShader = gl.createShader(gl.VERTEX_SHADER), fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-            gl.shaderSource(vertexShader, `#version 300 es
-                precision highp float;
-                in vec2 pos;
-                out vec2 uv;
-                uniform vec2 offset;
-                uniform float scale;
-                void main() {
-                    uv = pos * 0.5 + 0.5;
-                    gl_Position = vec4((pos + offset) * scale, 0.0, 1.0);
-                }
-            `);
-            gl.shaderSource(fragmentShader, `#version 300 es
-                precision highp float;
-                in vec2 uv;
-                uniform sampler2D u_texture;
-                out vec4 outColor;
-                void main() {
-                    outColor = texture(u_texture, uv);
-                }
-            `);
-            gl.compileShader(vertexShader);
-            gl.compileShader(fragmentShader);
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
+
+            const vertex = gl.createShader(gl.VERTEX_SHADER);
+            const fragment = gl.createShader(gl.FRAGMENT_SHADER);
+
+            const vs = `#version 300 es
+            uniform vec4 state;
+            uniform vec2 pos;
+            uniform vec4 img;
+            out vec4 image;
+            out vec2 coord;
+            void main() {
+                vec2 points[] = vec2[](vec2(-.5, .5), vec2(.5, .5), vec2(-.5, .5 - img.z), vec2(.5, .5 - img.z));
+                vec2 coords[] = vec2[](vec2(0, 1), vec2(1, 1), vec2(0, 1. - img.z), vec2(1, 1. - img.z));
+                gl_Position = vec4((points[gl_VertexID] + pos + state.xy) * state.zw, 0, 1);
+                coord = coords[gl_VertexID] * 16.;
+                image = vec4(vec3(img.xy, 1. - img.z) * 16., img.a);
+            }`;
+
+            const fs = `#version 300 es
+            precision highp float;
+            uniform sampler2D sampler;
+            in vec2 coord;
+            in vec4 image;
+            out vec4 color;
+            void main() {
+                vec2 pos = vec2(max(min(coord.x, 15.), 0.), max(min(coord.y, 15.), image.z));
+                vec2 size = vec2(textureSize(sampler, 0));
+                vec4 shade = texture(sampler, (image.xy + pos) / size);
+                color = vec4(shade.rgb, shade.a * image.w);
+            }`;
+
+            gl.shaderSource(vertex, vs);
+            gl.shaderSource(fragment, fs);
+            gl.compileShader(vertex);
+            gl.compileShader(fragment);
+
+            gl.attachShader(program, vertex);
+            gl.attachShader(program, fragment);
             gl.linkProgram(program);
             gl.useProgram(program);
-            const positionBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-            const vao = gl.createVertexArray();
-            gl.bindVertexArray(vao);
-            gl.enableVertexAttribArray(0);
-            gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 8, 0);
-            const scaleX = state.zoom / canvas.width, scaleY = state.zoom / canvas.height;
-            gl.uniform2f(gl.getUniformLocation(program, "offset"), state.x * scaleX * 2, state.y * scaleY * 2);
-            gl.uniform2f(gl.getUniformLocation(program, "scale"), scaleX, scaleY);
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-            requestAnimationFrame(draw);
-        };
-        requestAnimationFrame(draw);
+
+            gl.deleteShader(vertex);
+            gl.deleteShader(fragment);
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+            const texture = gl.createTexture();
+            const tiles = new Image();
+
+            function render() {
+                const loc = e => [e % TILE, Math.floor(e / TILE)];
+
+                const width = Math.floor(canvas.width / state.zoom / 2) + 1;
+                const height = Math.floor(canvas.height / state.zoom / 2) + 1;
+                const index = width * 2 + 1;
+
+                const pos = gl.getUniformLocation(program, "pos");
+                const img = gl.getUniformLocation(program, "img");
+                const alt = Math.floor(Date.now() / 500) % 2;
+
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                for (let i = 0; i < index * (height * 2 + 1); i++) {
+                    const image = e => e.anim && alt || e.alt && alt ? e.spr + 1 : e.spr;
+
+                    const x = i % index - width - Math.round(state.x);
+                    const y = Math.floor(i / index) - height - Math.round(state.y);
+                    const altVal = ~~(Math.sin(x) * 1e3 + Math.cos(y)) & 1;
+
+                    const wall = build[add(x, y)];
+                    const tile = floor[add(x, y)];
+                    const [px, py] = loc(tile ? image(tile) : altVal);
+
+                    gl.uniform2f(pos, x, y);
+                    gl.uniform4f(img, px, py, 1, 1);
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+                    if (tile) {
+                        const t = !floor[add(x, y - 1)];
+                        const b = !floor[add(x, y + 1)];
+                        const l = !floor[add(x - 1, y)];
+                        const r = !floor[add(x + 1, y)];
+
+                        const idx = t && b && l && r ? 16 : t && b && r ? 17 : t && b && l ? 18 :
+                            b && l && r ? 19 : t && l && r ? 20 : t && l ? 32 : t && r ? 33 : l && b ? 34 :
+                            r && b ? 35 : l && r ? 36 : t && b ? 48 : l ? 49 : t ? 50 : b ? 51 : r ? 52 : 0;
+
+                        if (idx) {
+                            const [px, py] = loc(idx);
+                            gl.uniform4f(img, px, py, 1, 1);
+                            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                        }
+                    }
+
+                    if (wall) {
+                        const [px, py] = loc(wall.door && (!build[add(x - 1, y)] || !build[add(x + 1, y)]) ? wall.spr + TILE : image(wall));
+                        gl.uniform2f(pos, x, wall.off ? y - wall.off / TILE : y);
+                        gl.uniform4f(img, px, py, wall.height || 1, 1);
+                        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                    }
+                }
+
+                if (state.select) {
+                    const [mx, my] = mouse();
+                    const [x, y] = loc(state.select.spr || 0);
+
+                    gl.uniform2f(pos, mx, state.select.off ? my - state.select.off / TILE : my);
+                    gl.uniform4f(img, x, y, state.select.height || 1, .7);
+                    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                }
+            }
+
+            canvas.onwheel = e => {
+                const amount = e.deltaY / -5e2;
+                const rect = canvas.getBoundingClientRect();
+
+                const x = state.mx - rect.left - canvas.width / 2;
+                const y = state.my - canvas.height / 2;
+
+                state.zoom = Math.max(state.zoom * (1 + amount), 4);
+                state.x -= x / state.zoom * amount;
+                state.y -= y / state.zoom * amount;
+
+                update();
+                render();
+            };
+
+            let panMode = false;
+
+            canvas.onmousedown = e => {
+                e.preventDefault();
+                const [mx, my] = mouse();
+
+                if (e.which === 2 || (e.which === 1 && panMode)) {
+                    state.panStart = {x: state.mx, y: state.my, stateX: state.x, stateY: state.y};
+                    return;
+                }
+
+                if (state.shift) {
+                    state.quickStart = {x: mx, y: my};
+                } else if (e.which === 1) {
+                    place();
+                } else if (e.which === 3) {
+                    const key = add(mx, my);
+                    delete build[key];
+                    delete floor[key];
+                    delete heightMap[key];
+                    worker.postMessage({floor, build});
+                    updateSize();
+                }
+
+                render();
+            };
+
+            canvas.onmousemove = e => {
+                state.mx = e.clientX;
+                state.my = e.clientY;
+
+                if (state.panStart) {
+                    const dx = e.clientX - state.panStart.x;
+                    const dy = e.clientY - state.panStart.y;
+                    state.x = state.panStart.stateX - dx / state.zoom;
+                    state.y = state.panStart.stateY - dy / state.zoom;
+                    update();
+                }
+
+                render();
+            };
+
+            canvas.onmouseup = e => {
+                if (e.which === 2 || panMode) {
+                    state.panStart = null;
+                }
+
+                if (state.quickStart && state.select) {
+                    const [mx, my] = mouse();
+                    const cells = fillRectangle(state.quickStart.x, state.quickStart.y, mx, my);
+
+                    if (state.alt) {
+                        placeMultiple(cells, null, true);
+                    } else {
+                        placeMultiple(cells, state.select, false);
+                    }
+                }
+
+                state.quickStart = null;
+                render();
+            };
+
+            document.addEventListener("keydown", e => {
+                if (e.key === "Shift") state.shift = true;
+                if (e.key === "Alt") state.alt = true;
+            });
+
+            document.addEventListener("keyup", e => {
+                if (e.key === "Shift") state.shift = false;
+                if (e.key === "Alt") state.alt = false;
+            });
+
+            document.addEventListener("contextmenu", e => e.preventDefault());
+
+            new ResizeObserver(() => {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+
+                gl.viewport(0, 0, canvas.width, canvas.height);
+
+                update();
+                render();
+            }).observe(canvas);
+
+            tiles.onload = () => {
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, tiles);
+
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+
+                render();
+            };
+
+            const tooltip = document.getElementById("tooltip");
+            const categoryCollapsed = {};
+
+            BUILD.forEach(item => {
+                if (item.cat && !categoryCollapsed.hasOwnProperty(item.cat)) {
+                    categoryCollapsed[item.cat] = true;
+                }
+            });
+
+            const groupedByCategory = {};
+            BUILD.forEach(item => {
+                if (!groupedByCategory[item.cat]) {
+                    groupedByCategory[item.cat] = [];
+                }
+                groupedByCategory[item.cat].push(item);
+            });
+
+            Object.entries(groupedByCategory).forEach(([cat, items]) => {
+                const section = document.createElement("div");
+                section.className = "cat-section";
+
+                const label = document.createElement("div");
+                label.className = "cat-label" + (categoryCollapsed[cat] ? " collapsed" : "");
+                label.innerHTML = `${cat}<span class="toggle">${categoryCollapsed[cat] ? "+" : "−"}</span>`;
+                
+                const grid = document.createElement("div");
+                grid.className = "cat-grid" + (categoryCollapsed[cat] ? " collapsed" : "");
+
+                items.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "item-btn";
+                    const scale = 1.75;
+                    const sx = (item.img || 0) % TILE * TILE * -scale;
+                    const sy = Math.floor((item.img || 0) / TILE) * TILE * -scale;
+                    div.style.backgroundPosition = `${sx}px ${sy}px`;
+                    div.tabIndex = 1;
+                    div.title = item.name;
+
+                    div.addEventListener("mouseenter", () => {
+                        tooltip.textContent = item.name;
+                        tooltip.style.display = "block";
+                    });
+                    div.addEventListener("mousemove", e => {
+                        tooltip.style.left = (e.clientX + 12) + "px";
+                        tooltip.style.top = (e.clientY - 28) + "px";
+                    });
+                    div.addEventListener("mouseleave", () => {
+                        tooltip.style.display = "none";
+                    });
+
+                    div.onfocus = () => state.select = item;
+                    div.onblur = () => delete state.select;
+
+                    grid.appendChild(div);
+                });
+
+                label.addEventListener("click", () => {
+                    categoryCollapsed[cat] = !categoryCollapsed[cat];
+                    label.classList.toggle("collapsed");
+                    grid.classList.toggle("collapsed");
+                    label.querySelector(".toggle").textContent = categoryCollapsed[cat] ? "+" : "−";
+                });
+
+                section.appendChild(label);
+                section.appendChild(grid);
+                list.appendChild(section);
+            });
+
+            worker.onmessage = e => document.getElementById("mats").textContent = e.data;
+
+            document.getElementById("btnSave").onclick = () => {
+                const data = JSON.stringify({name: document.getElementById("baseName").value, build, floor});
+                const blob = new Blob([data], {type: "application/json"});
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = (document.getElementById("baseName").value || "base_project") + ".json";
+                link.click();
+            };
+
+            document.getElementById("btnLoad").onclick = () => document.getElementById("fileInput").click();
+
+            document.getElementById("fileInput").onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        document.getElementById("baseName").value = data.name || "";
+                        Object.keys(build).forEach(k => delete build[k]);
+                        Object.keys(floor).forEach(k => delete floor[k]);
+                        Object.assign(build, data.build || {});
+                        Object.assign(floor, data.floor || {});
+                        worker.postMessage({floor, build});
+                        updateSize();
+                        render();
+                    } catch (err) {
+                        alert("Failed to load project.");
+                    }
+                };
+                reader.readAsText(file);
+                document.getElementById("fileInput").value = "";
+            };
+
+            // ── ZOOM CONTROLS ──────────────────────────
+            document.getElementById("zoom-in").onclick = () => {
+                state.zoom *= 1.15;
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("zoom-out").onclick = () => {
+                state.zoom = Math.max(state.zoom * (1 / 1.15), 4);
+                const width = state.zoom / canvas.width * 2;
+                const height = state.zoom / canvas.height * -2;
+                gl.uniform4f(gl.getUniformLocation(program, "state"), state.x, state.y, width, height);
+                render();
+            };
+
+            document.getElementById("pan-mode").onclick = function() {
+                panMode = !panMode;
+                this.classList.toggle("active");
+            };
+
+            tiles.src = "map.png";
+
+            setInterval(render, 32);
+        }
+
+        start();
     </script>
 </body>
 </html>
