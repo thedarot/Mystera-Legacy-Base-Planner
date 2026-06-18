@@ -33,7 +33,9 @@ onmessage = event => {
 
     const floorItems = Object.values(event.data.floor || {});
     const buildItems = Object.values(event.data.build || {});
-    const stackedItems = Object.values(event.data.stackedItems || {});
+    // stackedItems values can be a single item or an array of items — flatten both cases
+    const stackedRaw = Object.values(event.data.stackedItems || {});
+    const stackedItems = stackedRaw.flat ? stackedRaw.flat() : [].concat(...stackedRaw);
     
     const allItems = floorItems.concat(buildItems).concat(stackedItems);
     

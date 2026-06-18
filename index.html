@@ -478,34 +478,35 @@
             background: #242424;
             border: 1px solid #444444;
             border-radius: 6px;
-            padding: 6px;
+            padding: 4px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
 
         #zoom-control button {
-            width: 28px;
-            height: 28px;
-            border: none;
-            background: transparent;
+            width: 24px;
+            height: 24px;
+            border: 1px solid #3a3a3a;
+            background: #2e2e2e;
             cursor: pointer;
-            border-radius: 4px;
+            border-radius: 3px;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
+            color: #ccc;
+            font-family: monospace;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1;
         }
 
         #zoom-control button:hover {
-            background: rgba(90, 175, 255, 0.1);
-        }
-
-        #zoom-control button img {
-            width: 16px;
-            height: 16px;
-            display: block;
+            background: #3a3a3a;
+            border-color: #5af;
+            color: #fff;
         }
     </style>
 </head>
@@ -601,12 +602,8 @@
             </button>
         </div>
         <div id="zoom-control">
-            <button id="zoom-in" title="Zoom in">
-                <img src="https://img.icons8.com/?size=16&id=16148&format=png&color=ffffff" alt="+">
-            </button>
-            <button id="zoom-out" title="Zoom out">
-                <img src="https://img.icons8.com/?size=16&id=16147&format=png&color=ffffff" alt="−">
-            </button>
+            <button id="zoom-in" title="Zoom in">+</button>
+            <button id="zoom-out" title="Zoom out">−</button>
         </div>
     </div>
 
@@ -749,6 +746,7 @@
             return true;
         }
         function isMiscellaneous(item) { return item.cat === "Miscellaneous Items"; }
+        function isChest(item) { return item.name === "Chest"; }
         function getTradeCounterAtPosition(x, y) {
             const key = add(x, y);
             const buildItem = build[key];
@@ -758,8 +756,21 @@
             const counter = getTradeCounterAtPosition(x, y);
             if (!counter) return false;
             const key = add(x, y);
-            if (stackedItems[key]) return false;
-            stackedItems[key] = item;
+            // Only 1 misc item allowed on top of Trading Counter
+            if (stackedItems[key] && stackedItems[key].length >= 1) return false;
+            if (!stackedItems[key]) stackedItems[key] = [];
+            stackedItems[key] = [item]; // replace, only 1 allowed
+            return true;
+        }
+        function tryStackMiscOnMisc(x, y, item) {
+            // Misc items can stack on other misc items (not chest, not on a counter)
+            const key = add(x, y);
+            const floorItem = floor[key];
+            if (!floorItem || !isMiscellaneous(floorItem) || isChest(floorItem)) return false;
+            // Don't stack on a position that already has a counter (handled by tryStackOnCounter)
+            if (getTradeCounterAtPosition(x, y)) return false;
+            if (!stackedItems[key]) stackedItems[key] = [];
+            stackedItems[key].push(item);
             return true;
         }
         function placeMultiple(cells, item, isErase = false) {
@@ -778,14 +789,22 @@
                             placeItem(x, y, item);
                         }
                     } else {
-                        if (isMiscellaneous(item)) {
-                            if (!tryStackOnCounter(x, y, item)) {
+                        if (isMiscellaneous(item) && !isChest(item)) {
+                            // Try to stack on Trading Counter first (1 item max)
+                            if (tryStackOnCounter(x, y, item)) {
+                                // stacked on counter
+                            } else if (floor[key] && isMiscellaneous(floor[key]) && !isChest(floor[key])) {
+                                // Stack on existing misc item (unlimited)
+                                tryStackMiscOnMisc(x, y, item);
+                            } else {
                                 if (build[key] && item.block) delete build[key];
                                 floor[key] = item;
+                                delete stackedItems[key];
                             }
                         } else {
                             if (build[key] && item.block) delete build[key];
                             floor[key] = item;
+                            delete stackedItems[key];
                         }
                     }
                 }
@@ -804,14 +823,22 @@
                     placeItem(mx, my, state.select);
                 }
             } else {
-                if (isMiscellaneous(state.select)) {
-                    if (!tryStackOnCounter(mx, my, state.select)) {
+                if (isMiscellaneous(state.select) && !isChest(state.select)) {
+                    // Try to stack on Trading Counter first (1 item max)
+                    if (tryStackOnCounter(mx, my, state.select)) {
+                        // stacked on counter
+                    } else if (floor[key] && isMiscellaneous(floor[key]) && !isChest(floor[key])) {
+                        // Stack on existing misc item (unlimited)
+                        tryStackMiscOnMisc(mx, my, state.select);
+                    } else {
                         if (build[key] && state.select.block) delete build[key];
                         floor[key] = state.select;
+                        delete stackedItems[key];
                     }
                 } else {
                     if (build[key] && state.select.block) delete build[key];
                     floor[key] = state.select;
+                    delete stackedItems[key];
                 }
             }
             worker.postMessage({floor, build, stackedItems});
