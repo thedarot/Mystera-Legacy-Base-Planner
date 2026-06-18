@@ -614,7 +614,6 @@
         const TILE = 16;
 
         const BUILD = [
-            // ── Structures ─────────────────────────────────────────
             {cat: "Structures", name: "Arrow Tower", spr: 46, img: 14, anim: true, height: 3, build: true, mats: {stone: 80, obsidian: 20, gold: 1}, wall: true},
             {cat: "Structures", name: "Duel Statue", spr: 45, img: 45, height: 3, build: true, mats: {stone: 100, bone: 20, gold: 15}, wall: true},
             {cat: "Structures", name: "Stone Wall", spr: 25, img: 25, height: 2, build: true, mats: {stone: 30, clay: 10}, wall: true},
@@ -632,8 +631,6 @@
             {cat: "Structures", name: "Fire Pit", spr: 77, img: 77, build: true, mats: {stone: 20, wood: 4, flint: 4, charcoal: 4}},
             {cat: "Structures", name: "Stairs", spr: 8, img: 8, build: true, mats: {stone: 100, clay: 20, gold: 1}},
             {cat: "Structures", name: "Recall Tile", spr: 24, img: 24, build: true, mats: {escape_lantern: 1, dragon_scale: 1, gold: 10}},
-
-            // ── Furniture ───────────────────────────────────────────
             {cat: "Furniture", name: "Training Dummy", spr: 58, img: 42, height: 2, build: true, mats: {wood: 50, tinder: 20, red_dye: 1}},
             {cat: "Furniture", name: "Signpost", spr: 59, img: 59, build: true, mats: {wood: 20}},
             {cat: "Furniture", name: "Bed", spr: 113, img: 81, height: 3, build: true, mats: {wood: 20, feather: 4, wool: 4}},
@@ -643,8 +640,6 @@
             {cat: "Furniture", name: "Bookcase", spr: 112, img: 112, build: true, mats: {wood: 200, gold: 5}},
             {cat: "Furniture", name: "Trading Counter", spr: 41, img: 41, build: true, mats: {wood: 50, silver: 10, gold: 5}},
             {cat: "Furniture", name: "Golden Candlestick", spr: 78, img: 78, anim: true, off: 4, build: true, mats: {bronze: 20, flint: 5, gold: 5}},
-
-            // ── Miscellaneous Items ──────────────────────────────────────
             {cat: "Miscellaneous Items", name: "Tomato", spr: 82, img: 82, mats: {}},
             {cat: "Miscellaneous Items", name: "Fish", spr: 83, img: 83, mats: {}},
             {cat: "Miscellaneous Items", name: "Malachite", spr: 98, img: 98, mats: {}},
@@ -656,8 +651,6 @@
             {cat: "Miscellaneous Items", name: "Ruby", spr: 125, img: 125, mats: {ruby: 1}},
             {cat: "Miscellaneous Items", name: "Esmerald", spr: 126, img: 126, mats: {esmerald: 1}},
             {cat: "Miscellaneous Items", name: "Tea", spr: 127, img: 127, mats: {}},
-
-            // ── Floors & Roads ──────────────────────────────────────
             {cat: "Floors & Roads", name: "Ground", spr: 2, img: 2, mats: {}},
             {cat: "Floors & Roads", name: "Gravel Road", spr: 3, img: 3, block: true, mats: {stone: 5, clay: 1}},
             {cat: "Floors & Roads", name: "Stone Road", spr: 4, img: 4, block: true, mats: {stone: 20}},
@@ -666,8 +659,6 @@
             {cat: "Floors & Roads", name: "Stone Floor", spr: 7, img: 7, mats: {stone: 15}},
             {cat: "Floors & Roads", name: "Deep Water", spr: 21, img: 21, anim: true, block: true, mats: {}},
             {cat: "Floors & Roads", name: "Shallow Water", spr: 23, img: 23, block: true, mats: {}},
-
-            // ── Farming ─────────────────────────────────────────────
             {cat: "Farming", name: "Spice", spr: 68, img: 68, build: true, mats: {holly_seed: 1}},
             {cat: "Farming", name: "Dye", spr: 69, img: 69, build: true, mats: {dye_seed: 1}},
             {cat: "Farming", name: "Salmoberry", spr: 70, img: 70, build: true, mats: {salmoberry_seed: 1}},
@@ -677,8 +668,6 @@
             {cat: "Farming", name: "Onion", spr: 74, img: 74, build: true, mats: {onion_seed: 1}},
             {cat: "Farming", name: "Lettuce", spr: 75, img: 75, build: true, mats: {lettuce_seed: 1}},
             {cat: "Farming", name: "Tomato", spr: 76, img: 76, build: true, mats: {tomato_seed: 1}},
-
-            // ── Flowers ─────────────────────────────────────────────
             {cat: "Flowers", name: "Flower 1", spr: 84, img: 84, build: true, mats: {flower_seed: 1}},
             {cat: "Flowers", name: "Flower 2", spr: 85, img: 85, build: true, mats: {flower_seed: 1}},
             {cat: "Flowers", name: "Flower 3", spr: 86, img: 86, build: true, mats: {flower_seed: 1}},
@@ -722,110 +711,64 @@
         const program = gl.createProgram();
         const build = {};
         const floor = {};
-        const stackedItems = {}; // ← NOVO: armazena items stackados em Trading Counters
+        const stackedItems = {};
 
-        function showModal() {
-            document.getElementById("modal-overlay").classList.remove("hidden");
-        }
-
+        function showModal() { document.getElementById("modal-overlay").classList.remove("hidden"); }
         function closeModal() {
             document.getElementById("modal-overlay").classList.add("hidden");
-            if (document.getElementById("dontShowAgain").checked) {
-                localStorage.setItem("basePlannerDontShowModal", "true");
-            }
+            if (document.getElementById("dontShowAgain").checked) localStorage.setItem("basePlannerDontShowModal", "true");
         }
-
         function toggleDontShowAgain() {
-            if (document.getElementById("dontShowAgain").checked) {
-                localStorage.setItem("basePlannerDontShowModal", "true");
-            } else {
-                localStorage.removeItem("basePlannerDontShowModal");
-            }
+            if (document.getElementById("dontShowAgain").checked) localStorage.setItem("basePlannerDontShowModal", "true");
+            else localStorage.removeItem("basePlannerDontShowModal");
         }
-
-        if (!localStorage.getItem("basePlannerDontShowModal")) {
-            document.getElementById("modal-overlay").classList.remove("hidden");
-        } else {
-            document.getElementById("modal-overlay").classList.add("hidden");
-        }
+        if (!localStorage.getItem("basePlannerDontShowModal")) document.getElementById("modal-overlay").classList.remove("hidden");
+        else document.getElementById("modal-overlay").classList.add("hidden");
 
         function mouse() {
             const rect = canvas.getBoundingClientRect();
-            return [
-                Math.round((state.mx - rect.left - canvas.width / 2) / state.zoom - state.x),
-                Math.round((state.my - canvas.height / 2) / state.zoom - state.y)
-            ];
+            return [Math.round((state.mx - rect.left - canvas.width / 2) / state.zoom - state.x), Math.round((state.my - canvas.height / 2) / state.zoom - state.y)];
         }
-
-        function add(x, y) {
-            return x + " " + y;
-        }
-
+        function add(x, y) { return x + " " + y; }
         function fillRectangle(startX, startY, endX, endY) {
             const cells = [];
-            const minX = Math.min(startX, endX);
-            const maxX = Math.max(startX, endX);
-            const minY = Math.min(startY, endY);
-            const maxY = Math.max(startY, endY);
-
-            for (let x = minX; x <= maxX; x++) {
-                for (let y = minY; y <= maxY; y++) {
-                    cells.push({x, y});
-                }
-            }
+            const minX = Math.min(startX, endX), maxX = Math.max(startX, endX), minY = Math.min(startY, endY), maxY = Math.max(startY, endY);
+            for (let x = minX; x <= maxX; x++) for (let y = minY; y <= maxY; y++) cells.push({x, y});
             return cells;
         }
-
         function canPlace(x, y, item) {
             if (!item.height) return true;
             const key = add(x, y);
             return !heightMap[key] || heightMap[key] < 1;
         }
-
         function placeItem(x, y, item) {
             const key = add(x, y);
             if (!item.height) return true;
-            
-            const requiredHeight = item.height;
-            if (heightMap[key] && heightMap[key] >= requiredHeight) return false;
-            
-            heightMap[key] = requiredHeight;
+            if (heightMap[key] && heightMap[key] >= item.height) return false;
+            heightMap[key] = item.height;
             return true;
         }
-
-        // ← NOVO: verifica se um item é miscellaneous
-        function isMiscellaneous(item) {
-            return item.cat === "Miscellaneous Items";
-        }
-
-        // ← NOVO: verifica se há um Trading Counter neste local
+        function isMiscellaneous(item) { return item.cat === "Miscellaneous Items"; }
         function getTradeCounterAtPosition(x, y) {
             const key = add(x, y);
             const buildItem = build[key];
             return buildItem && buildItem.name === "Trading Counter" ? buildItem : null;
         }
-
-        // ← NOVO: tenta colocar item stackado em um Trading Counter
         function tryStackOnCounter(x, y, item) {
             const counter = getTradeCounterAtPosition(x, y);
             if (!counter) return false;
-            
             const key = add(x, y);
-            // só permite stackar se o counter está vazio
             if (stackedItems[key]) return false;
-            
             stackedItems[key] = item;
             return true;
         }
-
         function placeMultiple(cells, item, isErase = false) {
             cells.forEach(({x, y}) => {
                 const key = add(x, y);
-                
                 if (isErase) {
                     delete build[key];
                     delete floor[key];
-                    delete stackedItems[key]; // ← NOVO: remove item stackado
+                    delete stackedItems[key];
                     delete heightMap[key];
                 } else if (state.select) {
                     if (item.build) {
@@ -836,11 +779,7 @@
                         }
                     } else {
                         if (isMiscellaneous(item)) {
-                            // tenta stackar em Trading Counter
-                            if (tryStackOnCounter(x, y, item)) {
-                                // sucesso, não faz mais nada
-                            } else {
-                                // não conseguiu stackar, remove o que tiver no local
+                            if (!tryStackOnCounter(x, y, item)) {
                                 if (build[key] && item.block) delete build[key];
                                 floor[key] = item;
                             }
@@ -851,17 +790,13 @@
                     }
                 }
             });
-
-            worker.postMessage({floor, build, stackedItems}); // ← NOVO: passa stackedItems
+            worker.postMessage({floor, build, stackedItems});
             updateSize();
         }
-
         function place() {
             if (!state.select) return false;
-
             const [mx, my] = mouse();
             const key = add(mx, my);
-
             if (state.select.build) {
                 if (floor[key] && floor[key].block) delete floor[key];
                 if (canPlace(mx, my, state.select)) {
@@ -870,11 +805,7 @@
                 }
             } else {
                 if (isMiscellaneous(state.select)) {
-                    // tenta stackar em Trading Counter
-                    if (tryStackOnCounter(mx, my, state.select)) {
-                        // sucesso
-                    } else {
-                        // não conseguiu stackar, coloca no chão
+                    if (!tryStackOnCounter(mx, my, state.select)) {
                         if (build[key] && state.select.block) delete build[key];
                         floor[key] = state.select;
                     }
@@ -883,25 +814,19 @@
                     floor[key] = state.select;
                 }
             }
-
-            worker.postMessage({floor, build, stackedItems}); // ← NOVO: passa stackedItems
+            worker.postMessage({floor, build, stackedItems});
             updateSize();
             return true;
         }
-
         function updateSize() {
             const walls = Object.entries(build).filter(([, v]) => v.wall);
-            if (walls.length === 0) {
-                document.getElementById("size-val").textContent = "—";
-                return;
-            }
+            if (walls.length === 0) { document.getElementById("size-val").textContent = "—"; return; }
             const xs = walls.map(([k]) => +k.split(" ")[0]);
             const ys = walls.map(([k]) => +k.split(" ")[1]);
             const w = Math.max(...xs) - Math.min(...xs) + 1;
             const h = Math.max(...ys) - Math.min(...ys) + 1;
             document.getElementById("size-val").textContent = `${w} × ${h}`;
         }
-
         function toggleExportPopup(e) {
             const popup = document.getElementById("export-popup");
             const rect = e.target.getBoundingClientRect();
@@ -909,21 +834,14 @@
             popup.style.top = (rect.bottom + 5) + "px";
             popup.classList.toggle("active");
         }
-
         function exportProject(type) {
             document.getElementById("export-popup").classList.remove("active");
-
-            if (type === "jpg-full" || type === "jpg-image") {
-                exportAsImage(type === "jpg-full");
-            } else if (type === "txt") {
-                exportAsText();
-            }
+            if (type === "jpg-full" || type === "jpg-image") exportAsImage(type === "jpg-full");
+            else if (type === "txt") exportAsText();
         }
-
         function exportAsImage(withLegend) {
             const walls = Object.entries(build).filter(([, v]) => v.wall);
             let minX = 0, maxX = 0, minY = 0, maxY = 0;
-            
             if (walls.length > 0) {
                 const xs = walls.map(([k]) => +k.split(" ")[0]);
                 const ys = walls.map(([k]) => +k.split(" ")[1]);
@@ -932,72 +850,49 @@
                 minY = Math.min(...ys) - 1;
                 maxY = Math.max(...ys) + 1;
             }
-
-            const baseW = (maxX - minX + 1) * 16;
-            const baseH = (maxY - minY + 1) * 16;
-
-            const offCanvas = document.createElement("canvas");
-            const offCtx = offCanvas.getContext("2d");
-
+            const baseW = (maxX - minX + 1) * 16, baseH = (maxY - minY + 1) * 16;
+            const offCanvas = document.createElement("canvas"), offCtx = offCanvas.getContext("2d");
             offCanvas.width = baseW;
             offCanvas.height = baseH;
-
             offCtx.fillStyle = "#000";
             offCtx.fillRect(0, 0, baseW, baseH);
-
             const tileImg = new Image();
             tileImg.onload = () => {
                 for (let x = minX; x <= maxX; x++) {
                     for (let y = minY; y <= maxY; y++) {
-                        const px = (x - minX) * 16;
-                        const py = (y - minY) * 16;
-
+                        const px = (x - minX) * 16, py = (y - minY) * 16;
                         const tile = floor[add(x, y)];
                         if (tile) {
-                            const sx = (tile.img % 16) * 16;
-                            const sy = Math.floor(tile.img / 16) * 16;
+                            const sx = (tile.img % 16) * 16, sy = Math.floor(tile.img / 16) * 16;
                             offCtx.drawImage(tileImg, sx, sy, 16, 16, px, py, 16, 16);
                         } else {
                             offCtx.fillStyle = "#2a5c2a";
                             offCtx.fillRect(px, py, 16, 16);
                         }
-
                         const wall = build[add(x, y)];
                         if (wall) {
-                            const sx = (wall.img % 16) * 16;
-                            const sy = Math.floor(wall.img / 16) * 16;
+                            const sx = (wall.img % 16) * 16, sy = Math.floor(wall.img / 16) * 16;
                             offCtx.drawImage(tileImg, sx, sy, 16, wall.height * 8, px, py - (wall.height - 1) * 8, 16, wall.height * 16);
                         }
                     }
                 }
-
                 let finalCanvas = offCanvas;
-
                 if (withLegend) {
-                    const legendCanvas = document.createElement("canvas");
-                    const legendCtx = legendCanvas.getContext("2d");
-
+                    const legendCanvas = document.createElement("canvas"), legendCtx = legendCanvas.getContext("2d");
                     legendCanvas.width = 1080;
                     legendCanvas.height = baseH + 220;
-
                     legendCtx.fillStyle = "#1a1a1a";
                     legendCtx.fillRect(0, 0, legendCanvas.width, legendCanvas.height);
-
                     legendCtx.drawImage(offCanvas, 0, 0);
-
                     legendCtx.fillStyle = "#242424";
                     legendCtx.fillRect(0, baseH, 1080, 220);
-
                     legendCtx.fillStyle = "#fff";
                     legendCtx.font = "bold 22px monospace";
                     legendCtx.fillText(document.getElementById("baseName").value || "Unnamed Base", 20, baseH + 35);
-
-                    const sizeText = document.getElementById("size-val").textContent;
-                    const now = new Date().toLocaleDateString();
+                    const sizeText = document.getElementById("size-val").textContent, now = new Date().toLocaleDateString();
                     legendCtx.fillStyle = "#aaa";
                     legendCtx.font = "11px monospace";
                     legendCtx.fillText(`${sizeText} · ${now}`, 20, baseH + 58);
-
                     legendCtx.strokeStyle = "#555";
                     legendCtx.lineWidth = 1;
                     legendCtx.strokeRect(20, baseH + 70, 1040, 35);
@@ -1005,16 +900,10 @@
                     legendCtx.font = "9px monospace";
                     legendCtx.fillText("Coded by GreyHope / Updated by Darot", 30, baseH + 87);
                     legendCtx.fillText("Materials calculator for Mystera Legacy", 30, baseH + 99);
-
-                    const mats = document.getElementById("mats").textContent;
-                    const matLines = mats.split("\n").filter(l => l.trim());
+                    const mats = document.getElementById("mats").textContent, matLines = mats.split("\n").filter(l => l.trim());
                     legendCtx.fillStyle = "#ccc";
                     legendCtx.font = "9px monospace";
-
-                    let xCol = 20;
-                    let yOffset = baseH + 120;
-                    let colCount = 0;
-
+                    let xCol = 20, yOffset = baseH + 120, colCount = 0;
                     matLines.forEach((line) => {
                         if (colCount >= 10) {
                             xCol += 320;
@@ -1025,10 +914,8 @@
                         yOffset += 12;
                         colCount++;
                     });
-
                     finalCanvas = legendCanvas;
                 }
-
                 const link = document.createElement("a");
                 link.href = finalCanvas.toDataURL("image/jpeg", 0.92);
                 link.download = (document.getElementById("baseName").value || "base_design") + ".jpg";
@@ -1036,70 +923,45 @@
             };
             tileImg.src = "map.png";
         }
-
         function exportAsText() {
-            const sizeText = document.getElementById("size-val").textContent;
-            const now = new Date().toLocaleDateString();
-            const mats = document.getElementById("mats").textContent;
-
-            const text = `═══════════════════════════════════════════
-${document.getElementById("baseName").value || "Unnamed Base"}
-═══════════════════════════════════════════
-
-Base Size: ${sizeText}
-Date: ${now}
-[...]
-
-`;
+            const sizeText = document.getElementById("size-val").textContent, now = new Date().toLocaleDateString(), mats = document.getElementById("mats").textContent;
+            const text = `═══════════════════════════════════════════\n${document.getElementById("baseName").value || "Unnamed Base"}\n═══════════════════════════════════════════\n\nBase Size: ${sizeText}\nDate: ${now}\n\n`;
             const link = document.createElement("a");
             link.href = "data:text/plain;charset=utf-8," + encodeURIComponent(text + mats);
             link.download = (document.getElementById("baseName").value || "base_design") + ".txt";
             link.click();
         }
-
-        // Rest of the code continues...
         const urlParams = new URLSearchParams(location.search);
         const baseState = urlParams.get("base");
-
         if (baseState) {
             const decodedState = JSON.parse(atob(baseState));
             Object.assign(build, decodedState.build);
             Object.assign(floor, decodedState.floor);
-            Object.assign(stackedItems, decodedState.stackedItems || {}); // ← NOVO: restaura stackedItems
+            Object.assign(stackedItems, decodedState.stackedItems || {});
             Object.assign(heightMap, decodedState.heightMap);
             document.getElementById("baseName").value = decodedState.baseName || "";
-            worker.postMessage({floor, build, stackedItems}); // ← NOVO: passa stackedItems
+            worker.postMessage({floor, build, stackedItems});
         }
-
-        BUILD.forEach(item => {
-            item.build = item.build || item.cat === "Miscellaneous Items" ? true : false;
-        });
-
+        BUILD.forEach(item => { item.build = item.build || false; });
         const cats = [...new Set(BUILD.map(e => e.cat))];
         cats.forEach(cat => {
             const section = document.createElement("div");
             section.className = "cat-section";
-
             const label = document.createElement("div");
             label.className = "cat-label";
             label.textContent = cat;
-
             const toggle = document.createElement("span");
             toggle.className = "toggle";
             toggle.textContent = "▼";
-
             label.appendChild(toggle);
             section.appendChild(label);
-
             const grid = document.createElement("div");
             grid.className = "cat-grid";
-
             BUILD.filter(e => e.cat === cat).forEach(item => {
                 const btn = document.createElement("button");
                 btn.className = "item-btn";
                 btn.style.backgroundPosition = `-${item.img % 16 * 28}px -${Math.floor(item.img / 16) * 28}px`;
                 btn.title = item.name;
-
                 btn.addEventListener("mouseenter", e => {
                     const tooltip = document.getElementById("tooltip");
                     tooltip.textContent = item.name;
@@ -1107,80 +969,52 @@ Date: ${now}
                     tooltip.style.left = (e.pageX + 10) + "px";
                     tooltip.style.top = (e.pageY + 10) + "px";
                 });
-
-                btn.addEventListener("mouseleave", () => {
-                    document.getElementById("tooltip").style.display = "none";
-                });
-
+                btn.addEventListener("mouseleave", () => { document.getElementById("tooltip").style.display = "none"; });
                 btn.addEventListener("click", () => {
                     state.select = item;
                     list.querySelectorAll(".item-btn").forEach(e => e.style.borderColor = "");
                     btn.style.borderColor = "#5af";
                 });
-
                 grid.appendChild(btn);
             });
-
             label.addEventListener("click", () => {
                 grid.classList.toggle("collapsed");
                 toggle.textContent = grid.classList.contains("collapsed") ? "▶" : "▼";
             });
-
             section.appendChild(grid);
             list.appendChild(section);
         });
-
         document.getElementById("btnSave").addEventListener("click", () => {
-            const state = {
-                build,
-                floor,
-                stackedItems, // ← NOVO: salva stackedItems
-                heightMap,
-                baseName: document.getElementById("baseName").value
-            };
+            const state = {build, floor, stackedItems, heightMap, baseName: document.getElementById("baseName").value};
             const encoded = btoa(JSON.stringify(state));
             const url = location.origin + location.pathname + "?base=" + encoded;
             navigator.clipboard.writeText(url);
             alert("Project URL copied to clipboard!");
         });
-
-        document.getElementById("btnLoad").addEventListener("click", () => {
-            document.getElementById("fileInput").click();
-        });
-
+        document.getElementById("btnLoad").addEventListener("click", () => { document.getElementById("fileInput").click(); });
         document.getElementById("fileInput").addEventListener("change", (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = (event) => {
                 try {
                     const data = JSON.parse(event.target.result);
                     Object.keys(build).forEach(k => delete build[k]);
                     Object.keys(floor).forEach(k => delete floor[k]);
-                    Object.keys(stackedItems).forEach(k => delete stackedItems[k]); // ← NOVO
+                    Object.keys(stackedItems).forEach(k => delete stackedItems[k]);
                     Object.keys(heightMap).forEach(k => delete heightMap[k]);
-
                     Object.assign(build, data.build);
                     Object.assign(floor, data.floor);
-                    Object.assign(stackedItems, data.stackedItems || {}); // ← NOVO: carrega stackedItems
+                    Object.assign(stackedItems, data.stackedItems || {});
                     Object.assign(heightMap, data.heightMap);
                     document.getElementById("baseName").value = data.baseName || "";
-
-                    worker.postMessage({floor, build, stackedItems}); // ← NOVO: passa stackedItems
+                    worker.postMessage({floor, build, stackedItems});
                     updateSize();
-                } catch (err) {
-                    alert("Error loading file: " + err.message);
-                }
+                } catch (err) { alert("Error loading file: " + err.message); }
             };
             reader.readAsText(file);
         });
-
-        canvas.addEventListener("mousemove", (e) => {
-            state.mx = e.clientX;
-            state.my = e.clientY;
-        });
-
+        canvas.addEventListener("mousemove", (e) => { state.mx = e.clientX; state.my = e.clientY; });
         canvas.addEventListener("mousedown", (e) => {
             if (e.button === 0) {
                 if (state.shift) {
@@ -1188,25 +1022,19 @@ Date: ${now}
                         const [mx, my] = mouse();
                         const cells = fillRectangle(state.quickStart[0], state.quickStart[1], mx, my);
                         placeMultiple(cells, state.select, true);
-                    } else {
-                        if (!state.quickStart) state.quickStart = mouse();
-                    }
-                } else {
-                    place();
-                    state.quickStart = null;
-                }
+                    } else if (!state.quickStart) state.quickStart = mouse();
+                } else { place(); state.quickStart = null; }
             } else if (e.button === 2) {
                 const [mx, my] = mouse();
                 const key = add(mx, my);
                 delete build[key];
                 delete floor[key];
-                delete stackedItems[key]; // ← NOVO: remove item stackado
+                delete stackedItems[key];
                 delete heightMap[key];
-                worker.postMessage({floor, build, stackedItems}); // ← NOVO: passa stackedItems
+                worker.postMessage({floor, build, stackedItems});
                 updateSize();
             }
         });
-
         canvas.addEventListener("mouseup", (e) => {
             if (state.shift && state.quickStart && e.button === 0) {
                 const [mx, my] = mouse();
@@ -1215,76 +1043,53 @@ Date: ${now}
                 state.quickStart = null;
             }
         });
-
         canvas.addEventListener("contextmenu", (e) => e.preventDefault());
-
         document.addEventListener("keydown", (e) => {
             if (e.key === "Shift") state.shift = true;
             if (e.key === "Alt") state.alt = true;
         });
-
         document.addEventListener("keyup", (e) => {
             if (e.key === "Shift") state.shift = false;
             if (e.key === "Alt") state.alt = false;
         });
-
         canvas.addEventListener("wheel", (e) => {
             e.preventDefault();
-            const zoomSpeed = 0.1;
-            const oldZoom = state.zoom;
+            const zoomSpeed = 0.1, oldZoom = state.zoom;
             state.zoom += e.deltaY < 0 ? state.zoom * zoomSpeed : -state.zoom * zoomSpeed;
             state.zoom = Math.max(TILE, state.zoom);
-
             const rect = canvas.getBoundingClientRect();
             const mx = (state.mx - rect.left - canvas.width / 2) / oldZoom;
             const my = (state.my - rect.height / 2) / oldZoom;
             state.x += mx - (state.mx - rect.left - canvas.width / 2) / state.zoom;
             state.y += my - (state.my - rect.height / 2) / state.zoom;
         }, {passive: false});
-
-        document.getElementById("zoom-in").addEventListener("click", () => {
-            state.zoom *= 1.2;
-        });
-
-        document.getElementById("zoom-out").addEventListener("click", () => {
-            state.zoom /= 1.2;
-        });
-
+        document.getElementById("zoom-in").addEventListener("click", () => { state.zoom *= 1.2; });
+        document.getElementById("zoom-out").addEventListener("click", () => { state.zoom /= 1.2; });
         document.getElementById("pan-mode").addEventListener("mousedown", () => {
             const panMode = document.getElementById("pan-mode");
             panMode.classList.toggle("active");
-
             if (panMode.classList.contains("active")) {
-                const startMouse = {x: state.mx, y: state.my};
-                const startPos = {x: state.x, y: state.y};
-
+                const startMouse = {x: state.mx, y: state.my}, startPos = {x: state.x, y: state.y};
                 const moveFn = (e) => {
                     state.mx = e.clientX;
                     state.my = e.clientY;
-                    const deltaX = state.mx - startMouse.x;
-                    const deltaY = state.my - startMouse.y;
+                    const deltaX = state.mx - startMouse.x, deltaY = state.my - startMouse.y;
                     state.x = startPos.x - deltaX / state.zoom;
                     state.y = startPos.y - deltaY / state.zoom;
                 };
-
                 const upFn = () => {
                     document.removeEventListener("mousemove", moveFn);
                     document.removeEventListener("mouseup", upFn);
                     panMode.classList.remove("active");
                 };
-
                 document.addEventListener("mousemove", moveFn);
                 document.addEventListener("mouseup", upFn);
             }
         });
-
         const draw = () => {
             gl.viewport(0, 0, canvas.width, canvas.height);
             gl.clear(gl.COLOR_BUFFER_BIT);
-
-            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER), fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
             gl.shaderSource(vertexShader, `#version 300 es
                 precision highp float;
                 in vec2 pos;
@@ -1296,7 +1101,6 @@ Date: ${now}
                     gl_Position = vec4((pos + offset) * scale, 0.0, 1.0);
                 }
             `);
-
             gl.shaderSource(fragmentShader, `#version 300 es
                 precision highp float;
                 in vec2 uv;
@@ -1306,33 +1110,25 @@ Date: ${now}
                     outColor = texture(u_texture, uv);
                 }
             `);
-
             gl.compileShader(vertexShader);
             gl.compileShader(fragmentShader);
-
             gl.attachShader(program, vertexShader);
             gl.attachShader(program, fragmentShader);
             gl.linkProgram(program);
             gl.useProgram(program);
-
             const positionBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-
             const vao = gl.createVertexArray();
             gl.bindVertexArray(vao);
             gl.enableVertexAttribArray(0);
             gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 8, 0);
-
-            const scaleX = state.zoom / canvas.width;
-            const scaleY = state.zoom / canvas.height;
+            const scaleX = state.zoom / canvas.width, scaleY = state.zoom / canvas.height;
             gl.uniform2f(gl.getUniformLocation(program, "offset"), state.x * scaleX * 2, state.y * scaleY * 2);
             gl.uniform2f(gl.getUniformLocation(program, "scale"), scaleX, scaleY);
-
             gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
             requestAnimationFrame(draw);
         };
-
         requestAnimationFrame(draw);
     </script>
 </body>
