@@ -26,31 +26,15 @@ onmessage = event => {
         salmoberry_seed: {name: "Salmoberry Seed"},
         dye_seed: {name: "Dye Seed"},
         potato: {name: "Potato"},
-        pinecone: {name: "Pinecone"},
-        esmerald: {name: "Esmerald"},
-        ruby: {name: "Ruby"}
-    };
+        pinecone: {name: "Pinecone"}  
+    }
 
-    const floorItems = Object.values(event.data.floor || {});
-    const buildItems = Object.values(event.data.build || {});
-    // stackedItems values can be a single item or an array of items — flatten both cases
-    const stackedRaw = Object.values(event.data.stackedItems || {});
-    const stackedItems = stackedRaw.flat ? stackedRaw.flat() : [].concat(...stackedRaw);
-    
-    const allItems = floorItems.concat(buildItems).concat(stackedItems);
-    
-    const materialsMap = allItems.reduce((all, item) => {
-        if (item && item.mats) {
-            for (const key in item.mats) {
-                all[key] = (all[key] || 0) + item.mats[key];
-            }
+    postMessage(Object.entries(Object.values(event.data.floor).concat(Object.values(event.data.build)).reduce((all, item) => {
+        for (const key in item.mats) {
+            all[key] ||= 0
+            all[key] += item.mats[key]
         }
-        return all;
-    }, {});
 
-    const result = Object.entries(materialsMap)
-        .map(([key, qty]) => KEY[key] ? KEY[key].name + ": " + qty : key + ": " + qty)
-        .join("\n");
-
-    postMessage(result);
-};
+        return all
+    }, {})).map(([key, qty]) => KEY[key].name + ": " + qty).join("\n"))
+}
